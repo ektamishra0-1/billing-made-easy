@@ -144,11 +144,11 @@ http://127.0.0.1:8000
 
 ---
 
-# 🌐 Deployment
+# 🌐 Live Demo
 
-The application is configured for deployment on **Vercel**.
+The application is publicly accessible at:
 
-Simply import the GitHub repository into Vercel and deploy.
+billing-made-easy-qcv4t3zkc-chaosify.vercel.app
 
 ---
 
