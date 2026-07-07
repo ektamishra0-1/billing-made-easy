@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Billing Made Easy</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Inter,sans-serif;
+}
+
+body{
+min-height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+padding:20px;
+background:
+linear-gradient(135deg,#eff6ff,#ffffff);
+}
+
+.card{
+
+width:100%;
+max-width:560px;
+
+background:white;
+
+border-radius:24px;
+
+padding:45px;
+
+box-shadow:
+0 20px 60px rgba(0,0,0,.08);
+
+}
+
+.logo{
+
+width:80px;
+height:80px;
+
+margin:auto;
+
+border-radius:50%;
+
+background:#2563eb;
+
+display:flex;
+justify-content:center;
+align-items:center;
+
+font-size:42px;
+
+color:white;
+
+margin-bottom:20px;
+
+}
+
+h1{
+
+text-align:center;
+
+font-size:36px;
+
+margin-bottom:10px;
+
+color:#0f172a;
+
+}
+
+.subtitle{
+
+text-align:center;
+
+color:#64748b;
+
+line-height:1.6;
+
+margin-bottom:35px;
+
+}
+
+.upload{
+
+border:2px dashed #60a5fa;
+
+border-radius:18px;
+
+padding:40px;
+
+text-align:center;
+
+transition:.25s;
+
+background:#f8fbff;
+
+}
+
+.upload:hover{
+
+border-color:#2563eb;
+
+background:#eff6ff;
+
+}
+
+.upload-icon{
+
+font-size:55px;
+
+margin-bottom:12px;
+
+}
+
+.upload h3{
+
+margin-bottom:10px;
+
+}
+
+.upload p{
+
+color:#64748b;
+
+margin-bottom:20px;
+
+}
+
+#filename{
+
+margin-top:18px;
+
+display:inline-block;
+
+padding:10px 18px;
+
+background:#dbeafe;
+
+border-radius:999px;
+
+color:#1d4ed8;
+
+font-weight:600;
+
+font-size:14px;
+
+max-width:100%;
+
+overflow:hidden;
+
+text-overflow:ellipsis;
+
+white-space:nowrap;
+
+}
+
+#fileInput{
+
+display:none;
+
+}
+
+.browse{
+
+display:inline-block;
+
+padding:12px 24px;
+
+background:#2563eb;
+
+color:white;
+
+border-radius:10px;
+
+cursor:pointer;
+
+font-weight:600;
+
+transition:.2s;
+
+}
+
+.browse:hover{
+
+background:#1d4ed8;
+
+}
+
+.submit{
+
+margin-top:30px;
+
+width:100%;
+
+height:56px;
+
+border:none;
+
+background:#2563eb;
+
+color:white;
+
+font-size:17px;
+
+font-weight:700;
+
+border-radius:12px;
+
+cursor:pointer;
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+gap:10px;
+
+transition:.2s;
+
+}
+
+.submit:hover{
+
+background:#1d4ed8;
+
+}
+
+.submit:disabled{
+
+background:#94a3b8;
+
+cursor:not-allowed;
+
+}
+
+.spinner{
+
+display:none;
+
+width:20px;
+height:20px;
+
+border-radius:50%;
+
+border:3px solid rgba(255,255,255,.35);
+
+border-top:3px solid white;
+
+animation:spin .8s linear infinite;
+
+}
+
+@keyframes spin{
+
+100%{
+
+transform:rotate(360deg);
+
+}
+
+}
+
+.footer{
+
+margin-top:25px;
+
+text-align:center;
+
+font-size:13px;
+
+color:#94a3b8;
+
+}
+
+@media(max-width:600px){
+
+.card{
+
+padding:28px;
+
+}
+
+h1{
+
+font-size:28px;
+
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="card">
+
+<div class="logo">🧾</div>
+
+<h1>Billing Made Easy</h1>
+
+<p class="subtitle">
+
+Upload your Daily Sales Report and we'll clean it automatically.
+
+</p>
+
+<form
+id="uploadForm"
+action="/upload"
+method="POST"
+enctype="multipart/form-data">
+
+<div class="upload">
+
+<div class="upload-icon">📤</div>
+
+<h3>Upload Excel File</h3>
+
+<p>Supported formats: .xlsx .xls</p>
+
+<label class="browse" for="fileInput">
+
+Browse Files
+
+</label>
+
+<input
+id="fileInput"
+type="file"
+name="file"
+accept=".xlsx,.xls"
+required>
+
+<div id="filename">
+
+No file selected
+
+</div>
+
+</div>
+
+<button
+class="submit"
+id="submitBtn"
+type="submit">
+
+<div
+class="spinner"
+id="spinner">
+</div>
+
+<span id="buttonText">
+
+Process & Download
+
+</span>
+
+</button>
+
+</form>
+
+<div class="footer">
+
+Billing Made Easy © 2026
+
+</div>
+
+</div>
+
+<script>
+
+const input = document.getElementById("fileInput");
+const filename = document.getElementById("filename");
+
+const form = document.getElementById("uploadForm");
+
+const button = document.getElementById("submitBtn");
+const spinner = document.getElementById("spinner");
+const buttonText = document.getElementById("buttonText");
+
+input.addEventListener("change", function () {
+
+    if (this.files.length > 0) {
+        filename.textContent = "📄 " + this.files[0].name;
+    } else {
+        filename.textContent = "No file selected";
+    }
+
+});
+
+form.addEventListener("submit", async function (e) {
+
+    e.preventDefault();
+
+    if (input.files.length === 0) {
+        alert("Please select an Excel file.");
+        return;
+    }
+
+    button.disabled = true;
+    spinner.style.display = "block";
+    buttonText.textContent = "Processing...";
+
+    const formData = new FormData();
+    formData.append("file", input.files[0]);
+
+    try {
+
+        const response = await fetch("/upload", {
+            method: "POST",
+            body: formData
+        });
+
+        if (!response.ok) {
+            throw new Error("Upload failed");
+        }
+
+        const blob = await response.blob();
+
+        const url = window.URL.createObjectURL(blob);
+
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "modified_sales_report.xlsx";
+
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+
+        window.URL.revokeObjectURL(url);
+
+        // Reset UI after successful download
+        spinner.style.display = "none";
+        button.disabled = false;
+        buttonText.textContent = "Process & Download";
+
+        input.value = "";
+        filename.textContent = "No file selected";
+
+    } catch (err) {
+
+        alert("Something went wrong while processing the file.");
+
+        spinner.style.display = "none";
+        button.disabled = false;
+        buttonText.textContent = "Process & Download";
+
+    }
+
+});
+
+</script>
+</body>
+</html>
